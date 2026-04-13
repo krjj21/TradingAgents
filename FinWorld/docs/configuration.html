@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinWorld Configuration Guide</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="docs.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- MathJax for mathematical formulas -->
+    <script src="mathjax-config.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <!-- Navigation Container -->
+    <div id="navigation-container"></div>
+
+    <!-- Sidebar Container -->
+    <div id="sidebar-container"></div>
+
+    <!-- Documentation Container -->
+    <div class="docs-container">
+        <!-- Main Content -->
+        <main class="docs-content">
+            <div class="back-to-home">
+                <a href="documentation.html" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Back to Documentation
+                </a>
+            </div>
+
+            <div class="docs-header">
+                <h1>FinWorld Configuration Guide</h1>
+                <p>Comprehensive guide to configuring FinWorld using Python-based configuration files</p>
+            </div>
+
+            <div class="docs-body">
+
+                <!-- Overview Section -->
+                <div class="content-section" id="overview">
+                <h2>Configuration System Overview</h2>
+                <p>FinWorld uses a Python-based configuration system built on <code>mmengine</code>. Each configuration file is a Python script that defines all necessary parameters for a specific task or component.</p>
+                
+                <div class="highlight-box">
+                    <h3>Key Features</h3>
+                    <ul>
+                        <li><strong>Python-based:</strong> Full Python syntax support for complex configurations</li>
+                        <li><strong>mmengine Integration:</strong> Built on mmengine for unified experiment management</li>
+                        <li><strong>Registry Mechanism:</strong> Flexible component management with type parameters</li>
+                        <li><strong>Seven-Layer Architecture:</strong> Organized by hierarchical layer structure</li>
+                        <li><strong>Task-oriented:</strong> Separate configs for different financial tasks</li>
+                    </ul>
+                </div>
+
+                    <h3>Configuration Structure</h3>
+                    <pre><code class="language-python"># Basic configuration structure
+task_type = "trading"           # Task type
+symbol = "AAPL"                 # Asset symbol
+workdir = "workdir"             # Working directory
+method = "ppo"                  # Method name
+tag = f"{symbol}_{task_type}_{method}"  # Experiment tag
+
+# Dataset parameters
+history_timestamps = 64
+future_timestamps = 32
+start_timestamp = "2015-05-01"
+end_timestamp = "2025-05-01"
+
+# Model parameters
+embedding_dim = 256
+num_heads = 4
+depth = 4
+
+# Configuration dictionaries
+dataset = dict(...)
+environment = dict(...)
+agent = dict(...)
+trainer = dict(...)
+task = dict(...)</code></pre>
+                </div>
+
+                <!-- Seven-Layer Architecture -->
+                <div class="content-section" id="seven-layers">
+                    <h2>Seven-Layer Architecture Configuration</h2>
+                    <p>FinWorld's configuration system is organized around its seven-layer architecture. Each layer has specific configuration parameters:</p>
+
+                    <div class="layer-grid">
+                        <div class="layer-card" id="data-layer">
+                            <div class="layer-header">
+                                <h3>1. Data Layer</h3>
+                                <span class="layer-badge">Download & Storage</span>
+                            </div>
+                            <div class="layer-content">
+                                <h4>Download Configuration</h4>
+                                <pre><code class="language-python">downloader = dict(
+    type="PriceDownloader",  # Specify downloader type
+    source="fmp",
+    assets_path="configs/_asset_list_/dj30.json",
+    start_date="1995-05-01",
+    end_date="2025-05-01"
+)</code></pre>
+                                
+                                <h4>Dataset Configuration</h4>
+                                <pre><code class="language-python">dataset = dict(
+    type="SingleAssetDataset",  # Specify dataset type
+    symbol="AAPL",
+    data_path="datasets/exp",
+    history_timestamps=64,
+    future_timestamps=32
+)</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="layer-card" id="process-layer">
+                            <div class="layer-header">
+                                <h3>2. Process Layer</h3>
+                                <span class="layer-badge">Data Processing</span>
+                            </div>
+                            <div class="layer-content">
+                                <h4>Processor Configuration</h4>
+                                <pre><code class="language-python">processor = dict(
+    type="AggProcessor",  # Specify aggregator processor type
+    procs_config=[
+        dict(
+            type="Processor",  # Specify processor type
+            assets_name="dj30",
+            data_type="price",
+            feature_type="Alpha158"
+        )
+    ]
+)</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="layer-card" id="model-layer">
+                            <div class="layer-header">
+                                <h3>3. Model Layer</h3>
+                                <span class="layer-badge">AI Models</span>
+                            </div>
+                            <div class="layer-content">
+                                <h4>Embedding Configuration</h4>
+                                <pre><code class="language-python">embed_config = dict(
+    type="TradingPatchEmbed",  # Specify embedding layer type
+    dense_input_dim=150,
+    latent_dim=256,
+    dropout=0.0
+)</code></pre>
+                                
+                                <h4>Encoder Configuration</h4>
+                                <pre><code class="language-python">encoder_config = dict(
+    type="TransformerEncoder",  # Specify encoder type
+    input_dim=256,
+    depth=4,
+    num_heads=4
+)</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="layer-card" id="agent-layer">
+                            <div class="layer-header">
+                                <h3>4. Agent Layer</h3>
+                                <span class="layer-badge">AI Agents</span>
+                            </div>
+                            <div class="layer-content">
+                                <h4>RL Agent</h4>
+                                <pre><code class="language-python">agent = dict(
+    type="PPO",  # Specify PPO agent type
+    task_type="trading",
+    action_dim=3,
+    actor_output_dim=3,
+    critic_output_dim=1
+)</code></pre>
+                                
+                                <h4>LLM Agent</h4>
+                                <pre><code class="language-python">agent = dict(
+    type="FinanceAgent",  # Specify finance agent type
+    model="Qwen3-32B",
+    max_steps=20
+)</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="layer-card" id="environment-layer">
+                            <div class="layer-header">
+                                <h3>5. Environment Layer</h3>
+                                <span class="layer-badge">Trading Environment</span>
+                            </div>
+                            <div class="layer-content">
+                                <h4>Trading Environment</h4>
+                                <pre><code class="language-python">environment = dict(
+    type="EnvironmentPatchTrading",  # Specify trading environment type
+    mode="train",
+    initial_amount=1e5,
+    transaction_cost_pct=1e-4
+)</code></pre>
+                                
+                                <h4>Portfolio Environment</h4>
+                                <pre><code class="language-python">environment = dict(
+    type="EnvironmentPatchPortfolio",  # Specify portfolio environment type
+    mode="train",
+    initial_amount=1e5,
+    num_assets=29
+)</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="layer-card" id="trainer-layer">
+                            <div class="layer-header">
+                                <h3>6. Trainer Layer</h3>
+                                <span class="layer-badge">Training Logic</span>
+                            </div>
+                            <div class="layer-content">
+                                <h4>RL Trainer</h4>
+                                <pre><code class="language-python">trainer = dict(
+    type="PPOTradingTrainer",  # Specify PPO trainer type
+    policy_learning_rate=1e-5,
+    total_steps=int(1e8),
+    device="cuda"
+)</code></pre>
+                                
+                                <h4>ML Trainer</h4>
+                                <pre><code class="language-python">trainer = dict(
+    type="MLTradingTrainer",  # Specify ML trainer type
+    n_estimators=1000,
+    learning_rate=0.05
+)</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="layer-card" id="task-layer">
+                            <div class="layer-header">
+                                <h3>7. Task Layer</h3>
+                                <span class="layer-badge">Task Orchestration</span>
+                            </div>
+                            <div class="layer-content">
+                                <h4>Task Configuration</h4>
+                                <pre><code class="language-python">task = dict(
+    type="Task",  # Specify task type
+    trainer=None,
+    task_type="trading"
+)</code></pre>
+                                
+                                <h4>Async Task</h4>
+                                <pre><code class="language-python">task = dict(
+    type="AsyncTask",  # Specify async task type
+    trainer=None,
+    task_type="trading"
+)</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Task Configurations -->
+                <div class="content-section" id="task-configs">
+                    <h2>Task-Specific Configurations</h2>
+                    <p>FinWorld provides comprehensive configuration examples for different financial tasks. All configuration files are organized in the <code>configs/</code> directory:</p>
+
+                    <div class="task-configs-grid">
+                        <div class="task-config-card">
+                            <h3>Trading Configurations</h3>
+                            <p>Configuration files for single-asset trading tasks using RL, ML, and rule-based approaches.</p>
+                            <div class="config-links">
+                                <a href="https://github.com/DVampire/FinWorld/tree/main/configs/rl_trading" target="_blank" class="config-link">
+                                    <i class="fas fa-robot"></i> RL Trading
+                                </a>
+                                <a href="https://github.com/DVampire/FinWorld/tree/main/configs/ml_trading" target="_blank" class="config-link">
+                                    <i class="fas fa-brain"></i> ML Trading
+                                </a>
+                                <a href="https://github.com/DVampire/FinWorld/tree/main/configs/rule_trading" target="_blank" class="config-link">
+                                    <i class="fas fa-cogs"></i> Rule Trading
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="task-config-card">
+                            <h3>Portfolio Configurations</h3>
+                            <p>Configuration files for multi-asset portfolio management using various approaches.</p>
+                            <div class="config-links">
+                                <a href="https://github.com/DVampire/FinWorld/tree/main/configs/rl_portfolio" target="_blank" class="config-link">
+                                    <i class="fas fa-robot"></i> RL Portfolio
+                                </a>
+                                <a href="https://github.com/DVampire/FinWorld/tree/main/configs/ml_portfolio" target="_blank" class="config-link">
+                                    <i class="fas fa-brain"></i> ML Portfolio
+                                </a>
+                                <a href="https://github.com/DVampire/FinWorld/tree/main/configs/rule_portfolio" target="_blank" class="config-link">
+                                    <i class="fas fa-cogs"></i> Rule Portfolio
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="task-config-card">
+                            <h3>Forecasting Configurations</h3>
+                            <p>Configuration files for time series forecasting using transformer-based models.</p>
+                            <div class="config-links">
+                                <a href="https://github.com/DVampire/FinWorld/tree/main/configs/time" target="_blank" class="config-link">
+                                    <i class="fas fa-chart-line"></i> Time Series
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="task-config-card">
+                            <h3>Agent Configurations</h3>
+                            <p>Configuration files for LLM-based financial agents and reasoning systems.</p>
+                            <div class="config-links">
+                                <a href="https://github.com/DVampire/FinWorld/tree/main/configs/agent" target="_blank" class="config-link">
+                                    <i class="fas fa-user-robot"></i> LLM Agents
+                                </a>
+                                <a href="https://github.com/DVampire/FinWorld/tree/main/configs/finreasoner" target="_blank" class="config-link">
+                                    <i class="fas fa-lightbulb"></i> Financial Reasoning
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="task-config-card">
+                            <h3>Data Configurations</h3>
+                            <p>Configuration files for data downloading, processing, and feature engineering.</p>
+                            <div class="config-links">
+                                <a href="https://github.com/DVampire/FinWorld/tree/main/configs/download" target="_blank" class="config-link">
+                                    <i class="fas fa-download"></i> Data Download
+                                </a>
+                                <a href="https://github.com/DVampire/FinWorld/tree/main/configs/process" target="_blank" class="config-link">
+                                    <i class="fas fa-cogs"></i> Data Processing
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="task-config-card">
+                            <h3>Advanced Configurations</h3>
+                            <p>Configuration files for advanced models including VAE, Storm, and diffusion models.</p>
+                            <div class="config-links">
+                                <a href="https://github.com/DVampire/FinWorld/tree/main/configs/vae" target="_blank" class="config-link">
+                                    <i class="fas fa-project-diagram"></i> VAE Models
+                                </a>
+                                <a href="https://github.com/DVampire/FinWorld/tree/main/configs/storm" target="_blank" class="config-link">
+                                    <i class="fas fa-bolt"></i> Storm Framework
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="github-link-section">
+                        <h3>View All Configurations</h3>
+                        <p>Explore the complete configuration system on GitHub:</p>
+                        <a href="https://github.com/DVampire/FinWorld/tree/main/configs" target="_blank" class="github-link">
+                            <i class="fab fa-github"></i> Browse All Configuration Files
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Configuration Examples -->
+                <div class="content-section" id="examples">
+                    <h2>Complete Configuration Examples</h2>
+                    <p>Explore complete configuration examples for different scenarios on GitHub:</p>
+
+                    <div class="example-links-grid">
+                        <div class="example-link-card">
+                            <h3>Single Asset Trading</h3>
+                            <p>Complete configuration for trading a single asset using PPO reinforcement learning.</p>
+                            <a href="https://github.com/DVampire/FinWorld/blob/main/configs/rl_trading/ppo/AAPL_ppo_trading.py" target="_blank" class="example-link">
+                                <i class="fas fa-robot"></i> AAPL PPO Trading
+                            </a>
+                        </div>
+
+                        <div class="example-link-card">
+                            <h3>Multi-Asset Portfolio</h3>
+                            <p>Configuration for managing a portfolio of 29 DJ30 stocks using PPO.</p>
+                            <a href="https://github.com/DVampire/FinWorld/blob/main/configs/rl_portfolio/ppo/dj30_ppo_portfolio.py" target="_blank" class="example-link">
+                                <i class="fas fa-chart-pie"></i> DJ30 PPO Portfolio
+                            </a>
+                        </div>
+
+                        <div class="example-link-card">
+                            <h3>Time Series Forecasting</h3>
+                            <p>Configuration for forecasting future returns using Autoformer model.</p>
+                            <a href="https://github.com/DVampire/FinWorld/blob/main/configs/time/dj30_autoformer.py" target="_blank" class="example-link">
+                                <i class="fas fa-chart-line"></i> DJ30 Autoformer
+                            </a>
+                        </div>
+
+                        <div class="example-link-card">
+                            <h3>LLM Agent</h3>
+                            <p>Configuration for LLM-based financial agent with tool usage.</p>
+                            <a href="https://github.com/DVampire/FinWorld/blob/main/configs/agent/finance_agent.py" target="_blank" class="example-link">
+                                <i class="fas fa-user-robot"></i> Finance Agent
+                            </a>
+                        </div>
+
+                        <div class="example-link-card">
+                            <h3>ML Trading</h3>
+                            <p>Configuration for machine learning-based trading using LightGBM.</p>
+                            <a href="https://github.com/DVampire/FinWorld/blob/main/configs/ml_trading/lightgbm/AAPL_lightgbm_trading.py" target="_blank" class="example-link">
+                                <i class="fas fa-brain"></i> AAPL LightGBM Trading
+                            </a>
+                        </div>
+
+                        <div class="example-link-card">
+                            <h3>Data Download</h3>
+                            <p>Configuration for downloading financial data from multiple sources.</p>
+                            <a href="https://github.com/DVampire/FinWorld/blob/main/configs/download/dj30/dj30_fmp_price_1day.py" target="_blank" class="example-link">
+                                <i class="fas fa-download"></i> DJ30 Data Download
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="github-examples-section">
+                        <h3>Browse All Examples</h3>
+                        <p>Explore the complete collection of configuration examples:</p>
+                        <a href="https://github.com/DVampire/FinWorld/tree/main/configs" target="_blank" class="github-examples-link">
+                            <i class="fab fa-github"></i> View All Configuration Examples
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer Container -->
+    <div id="footer-container"></div>
+
+    <!-- Load Components -->
+    <script src="components/load-components.js"></script>
+</body>
+</html>
