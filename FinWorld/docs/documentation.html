@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinWorld Documentation</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="docs.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- MathJax for mathematical formulas -->
+    <script src="mathjax-config.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <!-- Navigation Container -->
+    <div id="navigation-container"></div>
+
+    <!-- Sidebar Container -->
+    <div id="sidebar-container"></div>
+
+    <!-- Documentation Container -->
+    <div class="docs-container">
+        <!-- Main Content -->
+        <main class="docs-content">
+            <div class="docs-header">
+                <h1>Documentation</h1>
+                <p>Welcome to FinWorld - Your comprehensive guide to financial AI development</p>
+            </div>
+
+            <!-- Introduction Section -->
+            <div class="content-section" id="introduction">
+                <h2>Welcome to FinWorld</h2>
+                <p>FinWorld is a comprehensive framework for financial AI research and development. It provides a unified platform for data processing, model training, backtesting, and deployment of financial AI systems.</p>
+                
+                <p>Our framework supports multiple AI paradigms including reinforcement learning, machine learning, and rule-based approaches, making it suitable for various financial applications from trading to portfolio management.</p>
+            </div>
+
+            <!-- Page Cards -->
+            <div class="page-cards">
+                <a href="architecture.html" class="page-card">
+                    <div class="page-card-icon">
+                        <i class="fas fa-sitemap"></i>
+                    </div>
+                    <h3>Architecture Guide</h3>
+                    <p>Learn about FinWorld's seven-layer architecture and how components interact to build robust financial AI systems.</p>
+                    <div class="learn-more">Learn More</div>
+                </a>
+
+                <a href="tasks.html" class="page-card">
+                    <div class="page-card-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <h3>Financial Tasks</h3>
+                    <p>Comprehensive overview of the four core financial AI tasks: forecasting, trading, portfolio management, and LLM applications.</p>
+                    <div class="learn-more">Learn More</div>
+                </a>
+
+                <a href="configuration.html" class="page-card">
+                    <div class="page-card-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3>Configuration Guide</h3>
+                    <p>Understand how to configure FinWorld using YAML files and the mmengine configuration system.</p>
+                    <div class="learn-more">Learn More</div>
+                </a>
+
+                <a href="api-reference.html" class="page-card">
+                    <div class="page-card-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>API Reference</h3>
+                    <p>Complete API documentation for all FinWorld components, classes, and methods.</p>
+                    <div class="learn-more">Learn More</div>
+                </a>
+
+                <a href="tutorials.html" class="page-card">
+                    <div class="page-card-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Tutorials</h3>
+                    <p>Step-by-step tutorials to get you started with FinWorld development and deployment.</p>
+                    <div class="learn-more">Learn More</div>
+                </a>
+
+                <a href="examples.html" class="page-card">
+                    <div class="page-card-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3>Examples</h3>
+                    <p>Practical examples and code samples to help you implement FinWorld in your projects.</p>
+                    <div class="learn-more">Learn More</div>
+                </a>
+            </div>
+
+            <!-- Installation Section -->
+            <div class="content-section" id="installation">
+                <h2>Installation</h2>
+                <p>FinWorld requires Python 3.11+ and can be installed using conda and make commands. Here's the complete installation process:</p>
+                
+                <h3>Requirements</h3>
+                <ul>
+                    <li>Python 3.11+</li>
+                    <li>CUDA 12.4+ (for GPU acceleration)</li>
+                    <li>Conda or Miniconda</li>
+                    <li>16+ GB RAM (recommended for large datasets)</li>
+                </ul>
+                
+                <h3>1. Create Conda Environment</h3>
+                <div class="code-block">
+                    <pre>conda create -n finworld python=3.11
+conda activate finworld</pre>
+                </div>
+                
+                <h3>2. Install Dependencies</h3>
+                <div class="code-block">
+                    <pre># Install base dependencies
+make install-base
+
+# Install browser automation tools
+make install-browser
+
+# Install VERL framework
+make install-verl</pre>
+                </div>
+                
+                <h3>Alternative Installation with Poetry</h3>
+                <div class="code-block">
+                    <pre># Install Poetry
+pip install poetry
+
+# Install dependencies
+poetry install</pre>
+                </div>
+            </div>
+
+            <!-- Quick Start Section -->
+            <div class="content-section" id="quick-start">
+                <h2>Quick Start</h2>
+                <p>Get started with FinWorld in just a few steps:</p>
+                
+                <h3>1. Download Financial Data</h3>
+                <div class="code-block">
+                    <pre># Download DJ30 data (example)
+python scripts/download/download.py --config configs/download/dj30/dj30_fmp_price_1day.py
+python scripts/download/download.py --config configs/download/dj30/dj30_fmp_price_1min.py</pre>
+                </div>
+                
+                <h3>2. Train RL Trading Models</h3>
+                <div class="code-block">
+                    <pre># Train PPO trading models for multiple stocks
+CUDA_VISIBLE_DEVICES=0 python scripts/rl_trading/train.py --config=configs/rl_trading/ppo/AAPL_ppo_trading.py</pre>
+                </div>
+                
+                <h3>3. Train Portfolio Models</h3>
+                <div class="code-block">
+                    <pre># Train PPO portfolio models for different indices
+CUDA_VISIBLE_DEVICES=0 python scripts/rl_portfolio/train.py --config=configs/rl_portfolio/ppo/dj30_ppo_portfolio.py</pre>
+                </div>
+                
+                <h3>4. Use Pre-built Scripts</h3>
+                <div class="code-block">
+                    <pre># Run example scripts
+bash examples/ppo_trading.sh
+bash examples/ppo_portfolio.sh
+bash examples/download.sh</pre>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer Container -->
+    <div id="footer-container"></div>
+
+    <!-- Load Components -->
+    <script src="components/load-components.js"></script>
+</body>
+</html>
